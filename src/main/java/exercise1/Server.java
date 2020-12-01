@@ -14,31 +14,37 @@ public class Server extends Thread {
 
     public void run() {
         try (ZContext context = new ZContext()) {
+            // Setup server
             ZMQ.Socket socket = context.createSocket(SocketType.REP);
             socket.setIPv6(true);
             socket.bind(ADDRESS);
             Gson gson = new Gson();
             RemoteKVStore store = new RemoteKVStore();
+            // Handle requests
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv();
                 String msg = new String(reply, ZMQ.CHARSET);
                 Request req = gson.fromJson(msg, Request.class);
-                if ("put".equals(req.FUNCTION_NAME)) {
-                    String result = store.put(req.PARAMETERS[0], req.PARAMETERS[1]);
-                    sendMessage(result, socket, gson);
-                } else if ("get".equals(req.FUNCTION_NAME)) {
-                    String result = store.get(req.PARAMETERS[0]);
-                    sendMessage(result, socket, gson);
-                } else if ("isEmpty".equals(req.FUNCTION_NAME)) {
-                    String result = Boolean.toString(store.isEmpty());
-                    sendMessage(result, socket, gson);
-                } else {
-                    String error = "Function '" + req.FUNCTION_NAME + "' is not supported!";
-                    socket.send(error.getBytes(ZMQ.CHARSET));
-                }
+                executeRequest(req, store, socket, gson);
             }
         } catch (ZMQException e) {
             System.out.println("Closing server...");
+        }
+    }
+
+    private void executeRequest(Request req, RemoteKVStore store, ZMQ.Socket socket, Gson gson) {
+        if ("put".equals(req.FUNCTION_NAME)) {
+            String result = store.put(req.PARAMETERS[0], req.PARAMETERS[1]);
+            sendMessage(result, socket, gson);
+        } else if ("get".equals(req.FUNCTION_NAME)) {
+            String result = store.get(req.PARAMETERS[0]);
+            sendMessage(result, socket, gson);
+        } else if ("isEmpty".equals(req.FUNCTION_NAME)) {
+            String result = Boolean.toString(store.isEmpty());
+            sendMessage(result, socket, gson);
+        } else {
+            String error = "Function '" + req.FUNCTION_NAME + "' is not supported!";
+            sendMessage(error, socket, gson);
         }
     }
 
