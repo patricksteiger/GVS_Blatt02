@@ -25,19 +25,13 @@ public class Server extends Thread {
                 Request req = gson.fromJson(msg, Request.class);
                 if ("put".equals(req.FUNCTION_NAME)) {
                     String result = store.put(req.PARAMETERS[0], req.PARAMETERS[1]);
-                    Response res = new Response(result);
-                    String resJson = gson.toJson(res);
-                    socket.send(resJson.getBytes(ZMQ.CHARSET));
+                    sendMessage(result, socket, gson);
                 } else if ("get".equals(req.FUNCTION_NAME)) {
                     String result = store.get(req.PARAMETERS[0]);
-                    Response res = new Response(result);
-                    String resJson = gson.toJson(res);
-                    socket.send(resJson.getBytes(ZMQ.CHARSET));
+                    sendMessage(result, socket, gson);
                 } else if ("isEmpty".equals(req.FUNCTION_NAME)) {
                     String result = Boolean.toString(store.isEmpty());
-                    Response res = new Response(result);
-                    String resJson = gson.toJson(res);
-                    socket.send(resJson.getBytes(ZMQ.CHARSET));
+                    sendMessage(result, socket, gson);
                 } else {
                     String error = "Function '" + req.FUNCTION_NAME + "' is not supported!";
                     socket.send(error.getBytes(ZMQ.CHARSET));
@@ -48,5 +42,10 @@ public class Server extends Thread {
         }
     }
 
+    private void sendMessage(String message, ZMQ.Socket socket, Gson gson) {
+        Response res = new Response(message);
+        String resJson = gson.toJson(res);
+        socket.send(resJson.getBytes(ZMQ.CHARSET));
+    }
 
 }
