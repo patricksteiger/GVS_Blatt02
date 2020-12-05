@@ -48,9 +48,7 @@ public class TestController {
             testClient1.post("Heute habe ich einen neuen Pflanzendünger ausprobiert! Große klasse!");
             testClient2.post("Ich wünsche euch einen tollen Tag!");
             Login login= new Login();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
+        }  catch (Exception e) {
             e.printStackTrace();
         }
 
