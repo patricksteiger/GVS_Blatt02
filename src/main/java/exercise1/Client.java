@@ -7,6 +7,12 @@ import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+/******************************************************************************
+ *
+ * Patrick Steiger und Annalisa Degenhard, 05.12.2020
+ *
+ *****************************************************************************/
+
 public class Client implements KVStore {
     private final ZContext context;
     private final ZMQ.Socket socket;

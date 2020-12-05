@@ -3,6 +3,12 @@ package exercise1;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/******************************************************************************
+ *
+ * Patrick Steiger und Annalisa Degenhard, 05.12.2020
+ *
+ *****************************************************************************/
+
 public class RemoteKVStore implements KVStore {
     private final Map<String, String> store;
 

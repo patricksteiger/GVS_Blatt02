@@ -8,6 +8,12 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQException;
 
+/******************************************************************************
+ *
+ * Patrick Steiger und Annalisa Degenhard, 05.12.2020
+ *
+ *****************************************************************************/
+
 public class Server extends Thread {
 
     public static final String ADDRESS = "tcp://localhost:5555";
