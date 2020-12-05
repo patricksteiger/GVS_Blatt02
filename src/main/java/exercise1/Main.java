@@ -1,36 +1,44 @@
 package exercise1;
 
+import java.util.Scanner;
+
+/******************************************************************************
+ *
+ * Patrick Steiger und Annalisa Degenhard, 05.12.2020
+ *
+ *****************************************************************************/
+
 public class Main {
     public static  void main(String[] args) {
         Server server = new Server();
         server.start();
         Client client = new Client(Server.ADDRESS);
 
-        boolean empty = client.isEmpty();
-        System.out.println("isEmpty()");
-        System.out.println("Expected: true");
-        System.out.println("Received: " + empty);
-        System.out.println();
-        System.out.println("put(\"key1\", \"1\")");
-        String result = client.put("key1", "1");
-        System.out.println("Expected: null");
-        System.out.println("Received: " + result);
-        System.out.println();
-        System.out.println("put(\"key1\", \"2\")");
-        result = client.put("key1", "2");
-        System.out.println("Expected: 1");
-        System.out.println("Received: " + result);
-        System.out.println();
-        System.out.println("get(\"key1\")");
-        result = client.get("key1");
-        System.out.println("Expected: 2");
-        System.out.println("Received: " + result);
-        System.out.println();
-        System.out.println("isEmpty()");
-        empty = client.isEmpty();
-        System.out.println("Expected: false");
-        System.out.println("Received: " + empty);
-        System.out.println();
+        // Loop for manual testing
+        System.out.println("Client and Server are running!");
+        System.out.println("Use format: 'isEmpty', 'get key' and 'put key value'");
+        try {
+            Scanner scan = new Scanner(System.in);
+            while (scan.hasNextLine()) {
+                String[] input = scan.nextLine().split(" ");
+                String result = "";
+                if ("isEmpty".equalsIgnoreCase(input[0])) {
+                    boolean empty = client.isEmpty();
+                    result = Boolean.toString(empty);
+                } else if ("get".equalsIgnoreCase(input[0])) {
+                    result = client.get(input[1]);
+                } else if ("put".equalsIgnoreCase(input[0])) {
+                    result = client.put(input[1], input[2]);
+                } else {
+                    break;
+                }
+                System.out.println("Result: " + result);
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input!");
+        } finally {
+            System.out.println("Ending application...");
+        }
 
         server.interrupt();
     }
